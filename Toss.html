@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dice Toss Game</title>
+<style>
+body{font-family:Arial;background:#f4f4f4;text-align:center;padding:20px}
+.box{max-width:600px;margin:auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 2px 8px #aaa}
+button{padding:10px 20px;font-size:16px;margin:10px;cursor:pointer}
+h1{color:#333}.score{font-size:20px}
+</style>
+</head>
+<body>
+<div class="box">
+<h1>Dice Toss Game</h1>
+<div id="toss">
+<button onclick="startToss()">Start Toss</button>
+<p id="tossResult"></p>
+</div>
+<div id="game" style="display:none">
+<h2 id="turn"></h2>
+<p class="score">Team A: <span id="aScore">0</span> | Turns: <span id="aTurns">0</span></p>
+<p class="score">Team B: <span id="bScore">0</span> | Turns: <span id="bTurns">0</span></p>
+<p>Last Dice: <span id="dice">-</span></p>
+<button id="rollBtn" onclick="rollDice()">Roll Dice</button>
+<h2 id="winner"></h2>
+</div>
+</div>
+<script>
+let turn="A",aScore=0,bScore=0,aTurns=0,bTurns=0,maxTurns=10;
+function startToss(){
+ turn=Math.random()<0.5?"A":"B";
+ document.getElementById("tossResult").innerText="Toss Winner: Team "+turn;
+ setTimeout(()=>{
+  document.getElementById("toss").style.display="none";
+  document.getElementById("game").style.display="block";
+  update();
+ },1000);
+}
+function update(){
+ document.getElementById("turn").innerText="Current Turn: Team "+turn;
+ document.getElementById("aScore").innerText=aScore;
+ document.getElementById("bScore").innerText=bScore;
+ document.getElementById("aTurns").innerText=aTurns;
+ document.getElementById("bTurns").innerText=bTurns;
+}
+function rollDice(){
+ if(aTurns>=maxTurns && bTurns>=maxTurns)return;
+ let d=Math.floor(Math.random()*6)+1;
+ document.getElementById("dice").innerText=d;
+ if(turn==="A"){aScore+=d;aTurns++;turn="B";}
+ else{bScore+=d;bTurns++;turn="A";}
+ update();
+ if(aTurns>=maxTurns && bTurns>=maxTurns){
+   document.getElementById("rollBtn").disabled=true;
+   let msg=aScore>bScore?"Team A Wins!":bScore>aScore?"Team B Wins!":"Match Draw!";
+   document.getElementById("winner").innerText=msg;
+ }
+}
+</script>
+</body>
+</html>
